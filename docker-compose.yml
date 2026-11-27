@@ -21,7 +21,7 @@ services:
     # ports: ["127.0.0.1:1433:1433"]
 
   csdl_khoi_tao:                    # chạy 1 lần: tạo 6 CSDL (chỉ cấu trúc) + tài khoản dịch vụ
-    build: ./sql
+    build: ./database
     restart: "no"
     depends_on: [sqlserver]
     environment:
@@ -37,7 +37,7 @@ services:
   # ---------- 6 dịch vụ ----------
   nguoidung:                        # Python · FastAPI
     <<: *dich-vu-chung
-    build: ./dich-vu/nguoi-dung
+    build: ./service/userservice
     depends_on:
       csdl_khoi_tao: { condition: service_completed_successfully }
     environment:
@@ -60,7 +60,7 @@ services:
 
   sanpham:                          # C# · ASP.NET Core
     <<: *dich-vu-chung
-    build: ./dich-vu/san-pham
+    build: ./service/productservice
     depends_on:
       csdl_khoi_tao: { condition: service_completed_successfully }
       nguoidung: { condition: service_healthy }
@@ -78,7 +78,7 @@ services:
 
   giohang:                          # Node.js · Express
     <<: *dich-vu-chung
-    build: ./dich-vu/gio-hang
+    build: ./service/cartservice
     depends_on:
       csdl_khoi_tao: { condition: service_completed_successfully }
       nguoidung: { condition: service_healthy }
@@ -94,7 +94,7 @@ services:
 
   donhang:                          # Java · Spring Boot
     <<: *dich-vu-chung
-    build: ./dich-vu/don-hang
+    build: ./service/orderservice
     depends_on:
       csdl_khoi_tao: { condition: service_completed_successfully }
       nguoidung: { condition: service_healthy }
@@ -117,7 +117,7 @@ services:
 
   thanhtoan:                        # Go · Gin
     <<: *dich-vu-chung
-    build: ./dich-vu/thanh-toan
+    build: ./service/paymentservice
     depends_on:
       csdl_khoi_tao: { condition: service_completed_successfully }
       nguoidung: { condition: service_healthy }
@@ -143,7 +143,7 @@ services:
 
   thongbao: &thongbao               # PHP · Laravel
     <<: *dich-vu-chung
-    build: ./dich-vu/thong-bao
+    build: ./service/notificationservice
     depends_on:
       csdl_khoi_tao: { condition: service_completed_successfully }
       nguoidung: { condition: service_healthy }
@@ -180,7 +180,7 @@ services:
 
   thongbao_gui_lai:                 # chạy lịch của Laravel: gửi lại email lỗi mỗi phút
     <<: *dich-vu-chung
-    build: ./dich-vu/thong-bao
+    build: ./service/notificationservice
     command: ["php", "artisan", "schedule:work"]
     depends_on: [thongbao]
     environment: *moi-truong-thong-bao
@@ -189,7 +189,7 @@ services:
   giaodien:                         # Next.js (cửa hàng + admin + BFF)
     <<: *dich-vu-chung
     build:
-      context: ./giao-dien
+      context: ./frontend
       args:
         NEXT_PUBLIC_TEN_CUA_HANG: ${TEN_CUA_HANG}
     depends_on: [nguoidung, sanpham, giohang, donhang, thanhtoan, thongbao]

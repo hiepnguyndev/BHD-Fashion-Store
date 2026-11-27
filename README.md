@@ -24,7 +24,7 @@ Mỗi dịch vụ có **tài khoản SQL riêng** (`dv_*`) chỉ đọc/ghi CSDL
 Cần Docker (Compose v2) và ~4 GB RAM trống cho SQL Server.
 
 ```bash
-./tao-env.sh                 # sinh .env với mật khẩu/khóa ngẫu nhiên
+./tao_env.sh                 # sinh .env với mật khẩu/khóa ngẫu nhiên
 nano .env                    # điền NGAN_HANG_* (tài khoản nhận tiền VietQR), TEN_CUA_HANG, WEB_URL
 docker compose up -d --build # lần đầu mất vài phút (tải thư viện Maven/NuGet/Composer/npm/Go)
 ```
@@ -46,14 +46,14 @@ docker compose exec sqlserver sh -c '/opt/mssql-tools18/bin/sqlcmd -C -S localho
 
 ### Giao diện
 
-Tông màu cam – trắng – be, khung bo góc; thanh điều hướng gồm **Trang chủ · Danh mục (Sản phẩm) · Ưu đãi · Liên hệ**, cộng đăng nhập/đăng ký, khu tài khoản và trang quản trị. Màu và độ bo góc chỉnh tập trung ở khối `:root` trong `giao-dien/src/app/globals.css`. Hiệu ứng chuyển trang ở `src/app/template.tsx` + `components/TienTrinh.tsx`; hiệu ứng tự tắt với người dùng bật “giảm chuyển động”.
+Tông màu cam – trắng – be, khung bo góc; thanh điều hướng gồm **Trang chủ · Danh mục (Sản phẩm) · Ưu đãi · Liên hệ**, cộng đăng nhập/đăng ký, khu tài khoản và trang quản trị. Màu và độ bo góc chỉnh tập trung ở khối `:root` trong `frontend/src/app/globals.css`. Hiệu ứng chuyển trang ở `src/app/template.tsx` + `components/ProgressBar.tsx`; hiệu ứng tự tắt với người dùng bật “giảm chuyển động”.
 
 - **Ưu đãi** hiển thị các mã giảm giá được tick *“Hiển thị công khai ở trang Ưu đãi”* (trong *Quản trị → Mã giảm giá*) và các sản phẩm đang có giá bán thấp hơn giá niêm yết.
 - **Liên hệ** đọc địa chỉ/điện thoại/email/giờ làm việc từ `LIEN_HE_*` trong `.env` (để trống thì hiện “Đang cập nhật”). Biểu mẫu hiện mở ứng dụng email của khách với nội dung điền sẵn; chưa có hộp thư nhận tin trên máy chủ.
 
 ### Thứ tự thiết lập cửa hàng
 
-*Danh mục* → *Sản phẩm* (tạo → thêm biến thể size/màu + tồn kho → tải ảnh → đặt “Đang bán”) → *Banner* → *Mã giảm giá* → *Chính sách* (sửa nội dung mẫu trong `giao-dien/src/app/(cua-hang)/chinh-sach/[slug]/page.tsx`).
+*Danh mục* → *Sản phẩm* (tạo → thêm biến thể size/màu + tồn kho → tải ảnh → đặt “Đang bán”) → *Banner* → *Mã giảm giá* → *Chính sách* (sửa nội dung mẫu trong `frontend/src/app/(storefront)/chinh-sach/[slug]/page.tsx`).
 
 ## Thanh toán
 
@@ -94,7 +94,7 @@ Hệ thống **không** tự gọi API hoàn tiền. Quản trị tạo yêu c�
 **Pháp lý (Việt Nam) — hãy tự xác nhận lại với nguồn chính thức, quy định thay đổi thường xuyên**
 - Thông báo/đăng ký website thương mại điện tử bán hàng với Bộ Công Thương (online.gov.vn) và hiển thị thông tin chủ sở hữu, chính sách trên website (trang *Thông tin cửa hàng* đang để trống để bạn điền).
 - Luật Thương mại điện tử và nghị định hướng dẫn mới có hiệu lực từ giữa năm 2026; luật bảo vệ dữ liệu cá nhân có hiệu lực từ đầu năm 2026 (đã có sẵn: đồng ý khi đăng ký, tải dữ liệu, xóa tài khoản). Đối chiếu nghĩa vụ của bạn (thông báo xử lý dữ liệu, lưu trữ, hóa đơn điện tử, thuế hộ kinh doanh).
-- Địa chỉ giao hàng dùng 2 cấp (tỉnh/thành – phường/xã). Danh sách tỉnh/thành trong `giao-dien/src/lib/dinh-dang.ts` cần đối chiếu lại với danh mục hành chính hiện hành.
+- Địa chỉ giao hàng dùng 2 cấp (tỉnh/thành – phường/xã). Danh sách tỉnh/thành trong `frontend/src/lib/format.ts` cần đối chiếu lại với danh mục hành chính hiện hành.
 - Nội dung ở `chinh-sach/[slug]` chỉ là **bản mẫu**, không phải tư vấn pháp lý.
 
 ## Bảo mật đã làm
@@ -121,9 +121,10 @@ Hãy kỳ vọng vài lỗi biên dịch/chạy nhỏ ở lần dựng đầu (n
 ## Cấu trúc thư mục
 
 ```
-docker-compose.yml  .env.example  tao-env.sh
+docker-compose.yml  .env.example  tao_env.sh
 gateway/nginx.conf               cổng vào, giới hạn tốc độ, ảnh tĩnh, webhook
-sql/                             tạo CSDL + tài khoản dịch vụ + trình khởi tạo
-dich-vu/{nguoi-dung,san-pham,gio-hang,don-hang,thanh-toan,thong-bao}/
-giao-dien/                       Next.js: src/app/(cua-hang), src/app/quan-tri, src/lib/bff.ts
+database/                        tạo CSDL + tài khoản dịch vụ + trình khởi tạo
+service/                         6 dịch vụ: userservice, productservice, cartservice,
+                                 orderservice, paymentservice, notificationservice
+frontend/                        Next.js: src/app/(storefront), src/app/quan-tri, src/lib/bff.ts
 ```
