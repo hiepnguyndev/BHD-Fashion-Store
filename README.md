@@ -2,24 +2,37 @@
 
 Website bán hàng thời trang xây theo kiến trúc **microservices**: 6 dịch vụ nghiệp vụ (mỗi dịch vụ một ngôn ngữ), giao diện **Next.js** gồm cửa hàng và trang quản trị, cơ sở dữ liệu **SQL Server**, tất cả chạy bằng **Docker Compose**.
 
+## Tính năng chính
+
+**Cửa hàng**
+- Danh mục 2 cấp: *Thời Trang Nam* / *Thời Trang Nữ* và các danh mục con (Áo, Quần, Váy).
+- Tìm kiếm có **gợi ý ngay khi gõ** (ảnh, tên, giá; hỗ trợ phím mũi tên, Enter, Esc), tìm không dấu, nhiều từ khóa, khớp cả tên danh mục.
+- Bộ lọc theo dữ liệu thật: **kích cỡ** và **màu sắc** dạng danh sách thả xuống (tự thay đổi theo danh mục đang xem), **khoảng giá** dạng thanh kéo hai đầu, sắp xếp, đếm số sản phẩm theo danh mục.
+- Trang chủ: Danh mục (hai thẻ lớn), Sản phẩm đang sale, Bộ sưu tập (chỉ hiện khi có), Mã giảm giá.
+- Menu **Ưu đãi** (sản phẩm đang giảm giá, mã giảm giá) và **Tin tức** (bài viết do quản trị đăng).
+- Giỏ hàng, đặt hàng, thanh toán COD / VietQR / SePay, tra cứu đơn, đổi trả, yêu thích, đánh giá, gợi ý size, giao diện sáng/tối, tiếng Việt/English.
+
+**Quản trị**: đơn hàng, đổi/trả, thanh toán và hoàn tiền, sản phẩm và kho, danh mục, bộ sưu tập, banner, **tin tức**, mã giảm giá, đánh giá, người dùng, nhật ký email.
+
 ## Mục lục
 
-1. [Kiến trúc](#kiến-trúc)
-2. [Yêu cầu](#yêu-cầu)
-3. [Chạy dự án](#chạy-dự-án)
-4. [Cấu hình `.env`](#cấu-hình-env)
-5. [Tạo tài khoản quản trị](#tạo-tài-khoản-quản-trị)
-6. [Thiết lập cửa hàng](#thiết-lập-cửa-hàng)
-7. [Các trang của website](#các-trang-của-website)
-8. [Thanh toán](#thanh-toán)
-9. [Email](#email)
-10. [Cơ sở dữ liệu](#cơ-sở-dữ-liệu)
-11. [Lệnh Docker hay dùng](#lệnh-docker-hay-dùng)
-12. [Xử lý sự cố](#xử-lý-sự-cố)
-13. [Cấu trúc thư mục](#cấu-trúc-thư-mục)
-14. [Bảo mật](#bảo-mật)
-15. [Trước khi mở bán thật](#trước-khi-mở-bán-thật)
-16. [Hạn chế đã biết](#hạn-chế-đã-biết)
+1. [Tính năng chính](#tính-năng-chính)
+2. [Kiến trúc](#kiến-trúc)
+3. [Yêu cầu](#yêu-cầu)
+4. [Chạy dự án](#chạy-dự-án)
+5. [Cấu hình `.env`](#cấu-hình-env)
+6. [Tạo tài khoản quản trị](#tạo-tài-khoản-quản-trị)
+7. [Thiết lập cửa hàng](#thiết-lập-cửa-hàng)
+8. [Các trang của website](#các-trang-của-website)
+9. [Thanh toán](#thanh-toán)
+10. [Email](#email)
+11. [Cơ sở dữ liệu](#cơ-sở-dữ-liệu)
+12. [Lệnh Docker hay dùng](#lệnh-docker-hay-dùng)
+13. [Xử lý sự cố](#xử-lý-sự-cố)
+14. [Cấu trúc thư mục](#cấu-trúc-thư-mục)
+15. [Bảo mật](#bảo-mật)
+16. [Trước khi mở bán thật](#trước-khi-mở-bán-thật)
+17. [Hạn chế đã biết](#hạn-chế-đã-biết)
 
 ---
 
@@ -35,7 +48,7 @@ giaodien (BFF, token nằm trong cookie httpOnly) ──► 6 dịch vụ bên d
 | Dịch vụ | Công nghệ | Nhiệm vụ | CSDL |
 |---|---|---|---|
 | `nguoidung` | Python · FastAPI | Đăng ký, đăng nhập (JWT RS256), refresh token xoay vòng, địa chỉ, xuất/xóa dữ liệu cá nhân | `ThoiTrang_NguoiDung` |
-| `sanpham` | C# · ASP.NET Core | Danh mục, sản phẩm, biến thể, tồn kho và giữ chỗ, ảnh, đánh giá, yêu thích, banner | `ThoiTrang_SanPham` |
+| `sanpham` | C# · ASP.NET Core | Danh mục, sản phẩm, biến thể, tồn kho và giữ chỗ, ảnh, đánh giá, yêu thích, banner, tin tức, bộ lọc | `ThoiTrang_SanPham` |
 | `giohang` | Node.js · Express | Giỏ hàng (khách vãng lai và tài khoản, gộp giỏ khi đăng nhập) | `ThoiTrang_GioHang` |
 | `donhang` | Java · Spring Boot | Đặt hàng, mã giảm giá, vòng đời đơn, hủy, đổi/trả, thống kê | `ThoiTrang_DonHang` |
 | `thanhtoan` | Go · Gin | COD, VietQR, cổng SePay, webhook ngân hàng, đối soát, hoàn tiền | `ThoiTrang_ThanhToan` |
@@ -78,7 +91,7 @@ Sau khi chạy xong:
 | http://localhost:8080/admin | Trang quản trị |
 | http://localhost:8025 | Mailpit (hộp thư thử nghiệm) |
 
-`csdl_khoi_tao` tự tạo CSDL, bảng và tài khoản dịch vụ. Dự án **không có dữ liệu sản phẩm sẵn**; bạn tạo trong trang quản trị hoặc nạp dữ liệu mẫu (xem [Dữ liệu mẫu](#dữ-liệu-mẫu)).
+`csdl_khoi_tao` tự tạo CSDL, bảng và tài khoản dịch vụ. CSDL mới tạo ra **trống**: chưa có danh mục và sản phẩm. Bạn tạo trong trang quản trị hoặc nạp từ file CSV (xem [Dữ liệu sản phẩm](#dữ-liệu-sản-phẩm)).
 
 ### Các lần sau
 
@@ -137,26 +150,37 @@ Trên Windows PowerShell, dấu nháy trong lệnh trên dễ bị lỗi. Cách 
 
 Thứ tự gợi ý trong trang quản trị:
 
-1. **Danh mục**
+1. **Danh mục**: tạo mục cha (Thời Trang Nam/Nữ) rồi các mục con
 2. **Sản phẩm**: tạo sản phẩm, thêm biến thể size/màu và tồn kho, tải ảnh, đặt trạng thái "Đang bán"
 3. **Banner**
-4. **Mã giảm giá**
-5. **Chính sách**: sửa nội dung mẫu trong `frontend/src/app/(storefront)/policies/[slug]/page.tsx`
+4. **Mã giảm giá** (tick "Hiển thị công khai" để hiện ở trang chủ và trang Ưu đãi)
+5. **Tin tức**: *Admin → Tin tức → Đăng bài* (tiêu đề, tóm tắt, ảnh bìa, nội dung, hẹn giờ đăng)
+6. **Chính sách**: sửa nội dung mẫu trong `frontend/src/app/(storefront)/policies/[slug]/page.tsx`
 
 Ghi chú:
 
+- Trang **Tin tức**: nội dung là văn bản thường; đoạn cách nhau một dòng trống, dòng bắt đầu bằng `## ` là tiêu đề phụ. Không chèn được HTML.
 - Trang **Ưu đãi** hiển thị các mã giảm giá được tick "Hiển thị công khai ở trang Ưu đãi" và các sản phẩm có giá bán thấp hơn giá niêm yết.
 - Trang **Liên hệ** đọc thông tin từ các biến `LIEN_HE_*`. Biểu mẫu hiện mở ứng dụng email của khách với nội dung điền sẵn; chưa có hộp thư nhận tin trên máy chủ.
 - Màu sắc và độ bo góc chỉnh tập trung ở khối `:root` trong `frontend/src/app/globals.css`.
 
-### Dữ liệu mẫu
+### Dữ liệu sản phẩm
 
-Thư mục `database/` có sẵn script nạp dữ liệu mẫu từ bộ dữ liệu Myntra (`database/archive/`), chỉ lấy áo, quần, váy, giày và chỉ dùng ảnh không có người mẫu:
+Thư mục `database/data/` chứa dữ liệu sản phẩm dạng CSV, tổ chức theo thư mục chính là danh mục:
 
-| File | Việc làm |
-|---|---|
-| `database/filter_no_model_images.py` | Lọc ảnh không có người mẫu, ghi ra `no_model_images.txt` |
-| `database/seed_sample_data.py` | Sinh dữ liệu mẫu ra một thư mục trống: `python seed_sample_data.py --out <thư_mục_trống> [--so-luong 800] [--seed 1]` |
+```
+database/data/
+  Thời Trang Nam/   Áo Nam/ (áo thun, polo, sơ mi, khoác gió, phao, hoodie, len, vest...)
+                    Quần Nam/ (âu, jeans, kaki, short)
+  Thời Trang Nữ/    Áo Nữ/  Quần Nữ/  Váy Nữ/
+```
+
+- Thư mục cấp 1 là danh mục cha, thư mục cấp 2 là danh mục con. Mỗi file CSV là một nhóm sản phẩm (khoảng 490 sản phẩm).
+- Cột CSV: `name, current_price_vnd, original_price_vnd, product_url, image_url, color_id, size_id`.
+- **Giá**: `GiaGoc` lấy từ `original_price_vnd` (trống thì dùng `current_price_vnd`) và `GiaBan` đặt bằng `GiaGoc`, tức bán đúng giá gốc, chưa giảm giá. Muốn giảm giá, sửa `GiaBan` trong trang quản trị.
+- **Ảnh** dùng trực tiếp `image_url` (ô ảnh trong admin chấp nhận `https://...`).
+- **Biến thể** (size, màu, mã màu, SKU, ảnh theo màu) không có trong CSV mà lấy từ trang `product_url` của từng sản phẩm. Tồn kho là số giả định (còn hàng = 20), hãy cập nhật tồn kho thật trong admin.
+- Repo hiện **chưa kèm script nạp** các file này vào CSDL; dữ liệu đã nạp trực tiếp vào `ThoiTrang_SanPham` trên máy phát triển.
 
 ## Các trang của website
 
@@ -165,9 +189,10 @@ Thư mục `database/` có sẵn script nạp dữ liệu mẫu từ bộ dữ l
 | URL | Trang |
 |---|---|
 | `/` | Trang chủ |
-| `/products` | Danh sách sản phẩm (lọc theo danh mục, bộ sưu tập, nổi bật, giảm giá) |
+| `/products` | Danh sách sản phẩm. Tham số: `danhMuc`, `tuKhoa`, `kichCo`, `mauSac`, `giaTu`, `giaDen`, `sapXep`, `giamGia`, `boSuuTap`, `trang` |
 | `/products/<slug>` | Chi tiết sản phẩm, đánh giá |
-| `/deals` | Ưu đãi |
+| `/deals` | Ưu đãi: mã giảm giá (`#ma-giam-gia`) và sản phẩm đang giảm giá (`#dang-giam-gia`) |
+| `/news`, `/news/<slug>` | Tin tức |
 | `/cart` | Giỏ hàng |
 | `/checkout` | Đặt hàng |
 | `/payment/<mã>` | Thanh toán đơn (hiện QR và thông tin tài khoản với VietQR) |
@@ -195,6 +220,7 @@ Thư mục `database/` có sẵn script nạp dữ liệu mẫu từ bộ dữ l
 | `/admin/categories` | Danh mục |
 | `/admin/collections` | Bộ sưu tập |
 | `/admin/banner` | Banner |
+| `/admin/news` | Tin tức (đăng, sửa, ẩn, xóa, hẹn giờ) |
 | `/admin/coupons` | Mã giảm giá |
 | `/admin/reviews` | Đánh giá |
 | `/admin/users` | Người dùng |
@@ -283,13 +309,15 @@ Volume của dự án:
 | `anh_san_pham` | Ảnh sản phẩm tải lên |
 | `khoa_jwt` | Khóa JWT (sinh tự động) |
 
-Script tạo CSDL nằm trong `database/`:
+Script tạo CSDL nằm trong `database/`. Các file `03` và `04` tự bỏ qua nếu bảng đã có, nên nâng cấp một CSDL cũ chỉ cần chạy lại `csdl_khoi_tao` (`docker compose up -d csdl_khoi_tao`) hoặc chạy tay file SQL tương ứng:
 
 | File | Nội dung |
 |---|---|
 | `01_create_fashion_db.sql` | Tạo 6 CSDL và các bảng |
 | `02_service_accounts.sql` | Tạo tài khoản SQL cho từng dịch vụ |
 | `03_body_measurements.sql` | Bảng số đo cơ thể, dùng để gợi ý size |
+| `04_tin_tuc.sql` | Bảng `TinTuc` (trong `ThoiTrang_SanPham`) cho mục Tin tức |
+| `data/` | Dữ liệu sản phẩm CSV theo danh mục (xem [Dữ liệu sản phẩm](#dữ-liệu-sản-phẩm)) |
 | `init_db.py` | Chạy các file SQL trên (do `csdl_khoi_tao` gọi) |
 
 ### Xem dữ liệu bằng công cụ có giao diện
@@ -339,7 +367,8 @@ docker compose down                     # xóa container, giữ dữ liệu
 | Chọn chuyển khoản nhưng không thấy QR | Đơn đã quá `HAN_THANH_TOAN_PHUT` phút nên chuyển sang "Hết hạn" | Đặt đơn mới và thanh toán trong thời gian giữ hàng |
 | Chuyển khoản xong nhưng đơn không tự xác nhận | SePay không gọi được webhook vì `WEB_URL` là `localhost` | Dùng tunnel công khai, cấu hình webhook trên SePay. Xem phần [Thanh toán](#thanh-toán) |
 | Link cũ kiểu `/dat-hang`, `/quan-tri` báo 404 | URL đã đổi sang tiếng Anh | Dùng URL mới ở phần [Các trang của website](#các-trang-của-website) |
-| `docker compose build` báo "additional privileges requested" | Tính năng bake của Docker Compose đòi quyền đọc file | Chạy lại với biến môi trường `BUILDX_BAKE_ENTITLEMENTS_FS=0`, hoặc `COMPOSE_BAKE=false` |
+| `docker compose build` báo "additional privileges requested" | Tính năng bake của Docker Compose đòi quyền đọc file | Chạy lại với biến môi trường `BUILDX_BAKE_ENTITLEMENTS_FS=0`. Nếu vẫn bị, build riêng bằng `docker build -t thoi-trang-<dịch-vụ> <thư-mục>` rồi `docker compose up -d --no-build <dịch-vụ>` |
+| Sau khi build lại, web báo 502 Bad Gateway | Nginx còn giữ địa chỉ cũ của container đã tạo lại | `docker compose restart gateway` |
 
 ## Cấu trúc thư mục
 
@@ -350,10 +379,9 @@ generate_env.sh           Sinh .env với mật khẩu ngẫu nhiên
 gateway/
   nginx.conf              Cổng vào, giới hạn tốc độ, ảnh tĩnh, webhook
 database/
-  01_create_fashion_db.sql, 02_service_accounts.sql, 03_body_measurements.sql
+  01_create_fashion_db.sql, 02_service_accounts.sql, 03_body_measurements.sql, 04_tin_tuc.sql
   init_db.py              Trình khởi tạo CSDL
-  filter_no_model_images.py, seed_sample_data.py, no_model_images.txt
-  archive/                Bộ dữ liệu Myntra dùng cho dữ liệu mẫu
+  data/                   Dữ liệu sản phẩm CSV theo danh mục (Nam/Nữ -> Áo/Quần/Váy)
 service/
   userservice/            Python · FastAPI
   productservice/         C# · ASP.NET Core
@@ -367,6 +395,7 @@ frontend/                 Next.js
   src/app/api/            auth/login, auth/logout, và [...path] chuyển tiếp xuống dịch vụ
   src/components/         Thành phần giao diện dùng chung
   src/lib/                bff.ts (BFF), api.ts, format.ts, i18n.ts
+  src/components/BoLocSanPham.tsx   Bộ lọc thả xuống và thanh kéo giá
 ```
 
 ## Bảo mật
@@ -407,6 +436,8 @@ Việc cần tự giữ an toàn: `.env` chứa mật khẩu SQL, khóa nội b�
 - **Webhook SePay chưa được thử với giao dịch thật.** Cấu trúc dữ liệu dựng theo tài liệu công khai của SePay. Riêng định dạng phản hồi API tra cứu đơn của cổng thanh toán chưa được tài liệu mô tả đầy đủ nên mã đọc theo cách linh hoạt. Hãy thử ở sandbox trước.
 - **Hoàn tiền thực hiện thủ công**, hệ thống không tự gọi API ngân hàng.
 - **Biểu mẫu Liên hệ** chỉ mở ứng dụng email của khách, chưa có hộp thư nhận tin trên máy chủ.
+- **Dữ liệu sản phẩm là bản sao từ nguồn bên ngoài** (giá, ảnh dùng link ngoài, tồn kho giả định). Ảnh trỏ về máy chủ nguồn nên có thể hỏng nếu nguồn đổi; cần kiểm tra quyền sử dụng nội dung trước khi bán thật.
+- **Mục Tin tức chỉ có văn bản thuần**, chưa có trình soạn thảo định dạng.
 - **Không có sao lưu tự động**, xem phần [Sao lưu và khôi phục](#sao-lưu-và-khôi-phục).
 - **Tên API và CSDL bằng tiếng Việt** không dấu, trong khi tên file, thư mục và URL trang web bằng tiếng Anh. Muốn đổi cả API thì phải sửa đồng bộ giao diện và 6 dịch vụ.
 - Slug của trang chính sách (`van-chuyen`, `doi-tra`…) vẫn bằng tiếng Việt không dấu.
