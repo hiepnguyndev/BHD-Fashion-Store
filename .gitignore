@@ -1,0 +1,10 @@
+.env
+node_modules/
+.next/
+bin/
+obj/
+target/
+vendor/
+__pycache__/
+*.pyc
+*.log
