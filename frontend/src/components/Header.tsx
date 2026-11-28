@@ -186,7 +186,7 @@ export default function Header({ danhMuc }: { danhMuc: { maDanhMuc: number; maDa
                   <Link href="/account">{t('Tài khoản của tôi')}</Link>
                   <Link href="/account/orders">{t('Đơn hàng của tôi')}</Link>
                   <Link href="/account/wishlist">{t('Sản phẩm yêu thích')}</Link>
-                  <Link href="/size-guide">{t('Gợi ý size')}</Link>
+                  <Link href="/account/size">{t('Số đo & gợi ý size')}</Link>
                   {nguoiDung.vaiTro === 'QuanTri' && <Link href="/admin">{t('Trang quản trị')}</Link>}
                   <button onClick={async () => { await dangXuat(); router.push('/'); router.refresh(); }}>{t('Đăng xuất')}</button>
                 </>
@@ -195,7 +195,6 @@ export default function Header({ danhMuc }: { danhMuc: { maDanhMuc: number; maDa
                   <Link href="/login">{t('Đăng nhập')}</Link>
                   <Link href="/register">{t('Tạo tài khoản')}</Link>
                   <Link href="/track-order">{t('Tra cứu đơn hàng')}</Link>
-                  <Link href="/size-guide">{t('Gợi ý size')}</Link>
                 </>
               )}
             </div>

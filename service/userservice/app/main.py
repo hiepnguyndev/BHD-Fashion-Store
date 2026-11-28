@@ -84,6 +84,7 @@ class ThongSoVao(BaseModel):
     vongNguc: int | None = Field(default=None, ge=50, le=160)
     vongEo: int | None = Field(default=None, ge=40, le=160)
     coGiay: float | None = Field(default=None, ge=34, le=46)
+    gioiTinh: str | None = Field(default=None, pattern="^(Nam|Nu)$")
 
 
 class DiaChiVao(BaseModel):
@@ -458,7 +459,9 @@ def goi_y_size(ts: dict) -> dict:
         vong_eo = ts["CanNang"] * 0.5 + 48  # ước lượng thô từ cân nặng
     if vong_eo is not None:
         eo_inch = vong_eo / 2.54
-        goi_y["kichCoQuan"] = str(int(_gan_nhat(eo_inch, [28, 30, 32, 34])))
+        # Cửa hàng có quần nam cỡ 28-34 và quần nữ cỡ 25-30 (theo inch vòng eo)
+        cac_co = [25, 26, 27, 28, 29, 30] if ts.get("GioiTinh") == "Nu" else [28, 29, 30, 31, 32, 33, 34]
+        goi_y["kichCoQuan"] = str(int(_gan_nhat(eo_inch, cac_co)))
     co_giay = ts.get("CoGiay")
     if co_giay is not None:
         goi_y["kichCoGiay"] = str(int(_gan_nhat(float(co_giay), [38, 39, 40, 41, 42, 43])))
@@ -479,12 +482,12 @@ def luu_thong_so(d: ThongSoVao, tk: dict = Depends(nguoi_dung_hien_tai)):
     with ket_noi() as con:
         if lay_mot(con, "SELECT 1 AS x FROM dbo.ThongSoCoThe WHERE MaNguoiDung = %s", ma_nd):
             thuc_thi(con, "UPDATE dbo.ThongSoCoThe SET ChieuCao=%s, CanNang=%s, VongNguc=%s, VongEo=%s, "
-                          "CoGiay=%s, NgayCapNhat=%s WHERE MaNguoiDung=%s",
-                     d.chieuCao, d.canNang, d.vongNguc, d.vongEo, d.coGiay, utc_bay_gio(), ma_nd)
+                          "CoGiay=%s, GioiTinh=%s, NgayCapNhat=%s WHERE MaNguoiDung=%s",
+                     d.chieuCao, d.canNang, d.vongNguc, d.vongEo, d.coGiay, d.gioiTinh, utc_bay_gio(), ma_nd)
         else:
-            thuc_thi(con, "INSERT INTO dbo.ThongSoCoThe (MaNguoiDung, ChieuCao, CanNang, VongNguc, VongEo, CoGiay) "
-                          "VALUES (%s, %s, %s, %s, %s, %s)",
-                     ma_nd, d.chieuCao, d.canNang, d.vongNguc, d.vongEo, d.coGiay)
+            thuc_thi(con, "INSERT INTO dbo.ThongSoCoThe (MaNguoiDung, ChieuCao, CanNang, VongNguc, VongEo, CoGiay, GioiTinh) "
+                          "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                     ma_nd, d.chieuCao, d.canNang, d.vongNguc, d.vongEo, d.coGiay, d.gioiTinh)
         ts = lay_mot(con, "SELECT * FROM dbo.ThongSoCoThe WHERE MaNguoiDung = %s", ma_nd) or {}
     ts.pop("MaNguoiDung", None)
     return {"thongSo": camel(ts), "goiY": goi_y_size(ts)}
@@ -498,7 +501,7 @@ def xuat_du_lieu(tk: dict = Depends(nguoi_dung_hien_tai)):
         dia_chi = lay_nhieu(con, "SELECT * FROM dbo.DiaChi WHERE MaNguoiDung = %s", nd["MaNguoiDung"])
         phien = lay_nhieu(con, "SELECT ThietBi, DiaChiIP, NgayTao, HetHanLuc, DaThuHoi FROM dbo.PhienDangNhap "
                                "WHERE MaNguoiDung = %s ORDER BY NgayTao DESC", nd["MaNguoiDung"])
-        thong_so = lay_mot(con, "SELECT ChieuCao, CanNang, VongNguc, VongEo, CoGiay FROM dbo.ThongSoCoThe "
+        thong_so = lay_mot(con, "SELECT ChieuCao, CanNang, VongNguc, VongEo, CoGiay, GioiTinh FROM dbo.ThongSoCoThe "
                                 "WHERE MaNguoiDung = %s", nd["MaNguoiDung"])
     nd = {k: v for k, v in nd.items() if k != "MatKhauBam"}
     return {"taiKhoan": camel(nd), "diaChi": [camel(r) for r in dia_chi], "phienDangNhap": [camel(r) for r in phien],

@@ -23,3 +23,9 @@ CREATE TABLE dbo.ThongSoCoThe (
 );
 END
 GO
+
+-- Giới tính (Nam/Nu) để gợi ý đúng danh mục và dải cỡ quần. Chạy lại nhiều lần vẫn an toàn.
+IF COL_LENGTH('dbo.ThongSoCoThe', 'GioiTinh') IS NULL
+    ALTER TABLE dbo.ThongSoCoThe ADD GioiTinh VARCHAR(3) NULL
+        CONSTRAINT CK_ThongSoCoThe_GioiTinh CHECK (GioiTinh IS NULL OR GioiTinh IN ('Nam', 'Nu'));
+GO
