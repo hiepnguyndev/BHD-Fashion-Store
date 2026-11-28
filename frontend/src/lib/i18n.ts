@@ -92,16 +92,48 @@ const EN: Record<string, string> = {
   'Số tiền chính thức được tính lại khi đặt hàng.': 'The final amount is recalculated when you place the order.',
   'Tôi đã đọc và đồng ý với': 'I have read and agree to the', 'điều khoản': 'terms', 'và': 'and', 'chính sách đổi trả': 'returns policy', 'Đang xử lý…': 'Processing…',
   'Hiện mật khẩu': 'Show password', 'Ẩn mật khẩu': 'Hide password',
+  // bổ sung: menu, trang chủ
+  'Tin tức': 'News', 'Sản phẩm đang giảm giá': 'Products on sale', 'Sản phẩm đang sale': 'On sale now', 'Khám phá ngay': 'Explore now',
+  'Thông tin & địa chỉ': 'Profile & addresses',
+  // trợ lý chat
+  'Trợ lý tư vấn': 'Shopping assistant', 'Mở trợ lý tư vấn': 'Open shopping assistant', 'Đóng trợ lý': 'Close assistant',
+  'Trả lời tự động bằng AI, có thể chưa chính xác': 'Automated AI replies, may be inaccurate', 'Nhập câu hỏi…': 'Type your question…', 'Câu hỏi': 'Question', 'Gửi': 'Send',
+  'Chào bạn! Mình là trợ lý của cửa hàng. Mình gợi ý sản phẩm, tư vấn size và giải đáp về đổi trả, vận chuyển. Bạn cần gì ạ?': "Hi! I'm the store assistant. I can suggest products, advise on sizes and answer questions about returns and shipping. How can I help?",
+  'Áo thun nam dưới 300k': "Men's T-shirts under 300k", 'Váy nữ đang giảm giá': "Women's dresses on sale", 'Mình cao 1m70 nặng 65kg mặc size nào?': "I'm 170 cm and 65 kg, which size should I wear?", 'Chính sách đổi trả': 'Returns policy',
+  'Xin lỗi, trợ lý đang bận. Bạn thử lại sau ít phút hoặc dùng trang Liên hệ nhé.': 'Sorry, the assistant is busy. Please try again in a few minutes or use the Contact page.',
+  // thử đồ bằng AI
+  '✨ Thử đồ bằng AI': '✨ AI virtual try-on', 'Thử đồ': 'Try on', 'Thử đồ: {ten}': 'Try on: {ten}', 'Tải ảnh lên': 'Upload photo', 'Dùng camera': 'Use camera', 'Chụp ảnh': 'Take photo',
+  'Chọn ảnh khác': 'Choose another photo', 'Thử ảnh khác': 'Try another photo', 'Thử lại': 'Try again', 'Xong, xóa ảnh': 'Done, delete photos', 'Ảnh của bạn': 'Your photo', 'Kết quả AI': 'AI result',
+  'Chọn ảnh toàn thân hoặc nửa người, đứng thẳng, rõ nét': 'Choose a full-body or half-body photo, standing straight and sharp',
+  'Hiện hỗ trợ áo. Mặc áo ôm sát hoặc áo ngắn tay cho kết quả tốt hơn.': 'Tops only for now. Fitted or short-sleeved tops give better results.',
+  'Chỉ một người trong ảnh, nền đơn giản, đủ sáng, nhìn thẳng.': 'One person only, plain background, good light, facing the camera.',
+  'Kết quả mang tính minh họa, không thay thế bảng size.': 'Results are illustrative and do not replace the size chart.',
+  'Tôi đồng ý gửi ảnh này tới dịch vụ AI công khai (Hugging Face) để thử đồ. Cửa hàng không lưu ảnh gốc; ảnh kết quả tự xóa sau 30 phút.': 'I agree to send this photo to a public AI service (Hugging Face) for the try-on. The store does not keep the original photo; results are deleted after 30 minutes.',
+  'Bạn cần đăng nhập để thử đồ.': 'Please sign in to try on.', 'Vui lòng giữ cửa sổ này mở.': 'Please keep this window open.', 'Đang gửi ảnh…': 'Sending photo…',
+  'Đang xếp hàng (vị trí {n})…': 'Waiting in queue (position {n})…', 'AI đang mặc thử cho bạn, thường mất 30–90 giây…': 'The AI is trying it on for you, usually 30–90 seconds…',
+  'Không mở được camera. Hãy cho phép trình duyệt dùng camera hoặc chọn tải ảnh lên.': 'Could not open the camera. Allow camera access or upload a photo instead.',
+  'Có lỗi xảy ra. Vui lòng thử lại.': 'Something went wrong. Please try again.', 'Không thử được. Vui lòng thử lại.': 'Try-on failed. Please try again.',
+  'Quá lâu chưa có kết quả. Dịch vụ miễn phí có thể đang quá tải, bạn thử lại sau nhé.': 'No result yet. The free service may be overloaded, please try again later.',
+  'Kết quả mang tính minh họa.': 'Results are illustrative.', 'Bạn còn {n} lượt hôm nay.': 'You have {n} tries left today.',
+  // trang tài khoản
+  'Thông tin cá nhân': 'Personal information', 'Email của bạn chưa được xác thực.': 'Your email has not been verified.',
+  'Lưu thay đổi': 'Save changes', 'Sổ địa chỉ': 'Address book', '+ Thêm địa chỉ': '+ Add address', 'Bạn chưa lưu địa chỉ nào.': 'You have no saved addresses.', 'Mặc định': 'Default',
+  'Sửa': 'Edit', 'Đổi mật khẩu': 'Change password', 'Mật khẩu hiện tại': 'Current password', 'Mật khẩu mới': 'New password', 'Dữ liệu cá nhân của bạn': 'Your personal data',
+  'Bạn có quyền tải về bản sao dữ liệu của mình và yêu cầu xóa tài khoản. Thông tin đơn hàng có thể được giữ lại theo quy định về kế toán, thuế.': 'You can download a copy of your data and ask for your account to be deleted. Order records may be retained under accounting and tax rules.',
+  'Tải dữ liệu của tôi': 'Download my data', 'Xóa tài khoản': 'Delete account', 'Người nhận': 'Recipient', 'Đặt làm địa chỉ mặc định': 'Set as default address', 'Lưu địa chỉ': 'Save address', 'Sửa địa chỉ': 'Edit address', 'Thêm địa chỉ': 'Add address', 'Xóa vĩnh viễn tài khoản': 'Permanently delete account', 'Xóa địa chỉ này?': 'Delete this address?',
+  'Hành động này không thể hoàn tác. Thông tin cá nhân của bạn sẽ được ẩn danh hóa. Nhập mật khẩu để xác nhận.': 'This cannot be undone. Your personal information will be anonymised. Enter your password to confirm.',
+  'Đã lưu thông tin.': 'Information saved.', 'Đã đổi mật khẩu.': 'Password changed.', 'Đã lưu địa chỉ.': 'Address saved.', 'Tài khoản đã được xóa.': 'Your account has been deleted.', 'Không xuất được dữ liệu.': 'Could not export your data.',
   // gợi ý size
-  'Gợi ý size': 'Size guide', 'Điền thông số cơ thể để hệ thống gợi ý cỡ Áo, Quần, Giày phù hợp. Đây là gợi ý gần đúng, không thay thế bảng size riêng của từng sản phẩm.':
-    "Enter your body measurements and the system will suggest matching Top, Bottom and Shoe sizes. This is an approximate guide, not a substitute for each product's own size chart.",
-  'Bạn chưa đăng nhập nên thông số sẽ không được lưu lại cho lần sau.': 'You are not signed in, so your measurements will not be saved for next time.',
+  'Số đo & gợi ý size': 'Measurements & size guide', 'Bạn mua đồ cho': 'Shopping for', 'Nam': 'Men', 'Nữ': 'Women', 'Lưu và xem gợi ý': 'Save and see suggestions',
+  'Điền số đo của bạn một lần: cửa hàng gợi ý cỡ Áo, Quần và sản phẩm còn hàng phù hợp, đồng thời trợ lý chat dùng thông tin này để tư vấn. Đây là gợi ý gần đúng, không thay thế bảng size riêng của từng sản phẩm.':
+    "Enter your measurements once: the store suggests Top and Bottom sizes and matching in-stock products, and the chat assistant uses them to advise you. This is an approximate guide, not a substitute for each product's size chart.",
+  'Đã lưu số đo. Trợ lý chat cũng sẽ dùng thông tin này để tư vấn.': 'Measurements saved. The chat assistant will also use them to advise you.',
+  'Chọn "Bạn mua đồ cho" để xem sản phẩm phù hợp.': 'Choose "Shopping for" to see matching products.',
+  'Áo nam': "Men's tops", 'Quần nam': "Men's bottoms", 'Áo nữ': "Women's tops", 'Quần nữ': "Women's bottoms", 'Váy nữ': "Women's dresses", 'size': 'size',
   'Chiều cao (cm)': 'Height (cm)', 'Cân nặng (kg)': 'Weight (kg)', 'Vòng ngực (cm)': 'Chest (cm)', 'Vòng eo (cm)': 'Waist (cm)', 'Cỡ giày (EU)': 'Shoe size (EU)',
-  'Xem gợi ý': 'Get suggestion', 'Size gợi ý của bạn': 'Your suggested size', 'Áo': 'Top', 'Quần': 'Bottom', 'Giày': 'Shoes',
-  'Áo gợi ý': 'Suggested tops', 'Quần gợi ý': 'Suggested bottoms', 'Giày gợi ý': 'Suggested shoes',
+  'Size gợi ý của bạn': 'Your suggested size', 'Áo': 'Top', 'Quần': 'Bottom', 'Giày': 'Shoes',
   'Hiện chưa có sản phẩm còn hàng ở cỡ này.': 'No items in stock at this size yet.',
   'Vui lòng nhập ít nhất vòng ngực, vòng eo hoặc cỡ giày (hoặc cả chiều cao và cân nặng).': 'Please enter at least chest, waist or shoe size (or both height and weight).',
-  'Đã lưu thông số và gợi ý size.': 'Measurements saved and size suggested.',
 };
 
 export function dich(lang: NgonNgu, khoa: string, thamSo?: Record<string, string | number>): string {

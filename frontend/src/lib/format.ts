@@ -43,7 +43,6 @@ export const TINH_THANH_PHO = [
   'Thái Nguyên', 'Thanh Hóa', 'Tuyên Quang', 'Vĩnh Long',
 ];
 
-export const anhHoacMacDinh = (s?: string | null) => (s ? s : '');
 
 // Chỉ cho phép chuyển hướng sau đăng nhập tới đường dẫn nội bộ (chống open redirect)
 export const diaChiTiepHopLe = (s: string | null) => (s && s.startsWith('/') && !s.startsWith('//') && !s.startsWith('/\\') ? s : null);

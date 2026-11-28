@@ -142,6 +142,39 @@ services:
     volumes:
       - khoa_jwt:/khoa:ro
 
+  trolyai:                          # Python · FastAPI: chatbot tư vấn và CSKH (không có CSDL riêng ở giai đoạn 1)
+    <<: *dich-vu-chung
+    build: ./service/assistantservice
+    depends_on:
+      sanpham: { condition: service_started }
+      donhang: { condition: service_started }
+    environment:
+      NGUOI_DUNG_URL: http://nguoidung:8000
+      SAN_PHAM_URL: http://sanpham:8080
+      DON_HANG_URL: http://donhang:8080
+      TEN_CUA_HANG: ${TEN_CUA_HANG}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+      TRO_LY_LUOT_MOI_PHUT: ${TRO_LY_LUOT_MOI_PHUT:-12}
+      TRO_LY_LUOT_LLM_MOI_NGAY: ${TRO_LY_LUOT_LLM_MOI_NGAY:-40}
+
+  thudo:                            # Python · FastAPI: thử đồ bằng AI (gọi Space công khai trên Hugging Face, ảnh không lưu lâu)
+    <<: *dich-vu-chung
+    build: ./service/tryonservice
+    depends_on:
+      nguoidung: { condition: service_healthy }
+      sanpham: { condition: service_started }
+    environment:
+      NGUOI_DUNG_URL: http://nguoidung:8000
+      SAN_PHAM_URL: http://sanpham:8080
+      GATEWAY_URL: http://gateway
+      THU_DO_SPACES: ${THU_DO_SPACES:-yisol/IDM-VTON,Nymbo/Virtual-Try-On}
+      HF_TOKEN: ${HF_TOKEN:-}
+      THU_DO_LUOT_MOI_NGAY: ${THU_DO_LUOT_MOI_NGAY:-5}
+      THU_DO_GIU_KET_QUA_PHUT: ${THU_DO_GIU_KET_QUA_PHUT:-30}
+    tmpfs:
+      - /du-lieu:uid=10001,size=200m      # ảnh tạm nằm trong RAM, mất khi container dừng
+
   thongbao: &thongbao               # PHP · Laravel
     <<: *dich-vu-chung
     build: ./service/notificationservice
@@ -193,7 +226,7 @@ services:
       context: ./frontend
       args:
         NEXT_PUBLIC_TEN_CUA_HANG: ${TEN_CUA_HANG}
-    depends_on: [nguoidung, sanpham, giohang, donhang, thanhtoan, thongbao]
+    depends_on: [nguoidung, sanpham, giohang, donhang, thanhtoan, thongbao, trolyai, thudo]
     environment:
       NGUOI_DUNG_URL: http://nguoidung:8000
       SAN_PHAM_URL: http://sanpham:8080
@@ -201,6 +234,8 @@ services:
       DON_HANG_URL: http://donhang:8080
       THANH_TOAN_URL: http://thanhtoan:8080
       THONG_BAO_URL: http://thongbao:8080
+      TRO_LY_URL: http://trolyai:8000
+      THU_DO_URL: http://thudo:8000
       KHOA_NOI_BO: ${KHOA_NOI_BO}
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
       WEB_URL: ${WEB_URL}

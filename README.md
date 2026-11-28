@@ -10,7 +10,7 @@ Website bán hàng thời trang xây theo kiến trúc **microservices**: 6 dị
 - Bộ lọc theo dữ liệu thật: **kích cỡ** và **màu sắc** dạng danh sách thả xuống (tự thay đổi theo danh mục đang xem), **khoảng giá** dạng thanh kéo hai đầu, sắp xếp, đếm số sản phẩm theo danh mục.
 - Trang chủ: Danh mục (hai thẻ lớn), Sản phẩm đang sale, Bộ sưu tập (chỉ hiện khi có), Mã giảm giá.
 - Menu **Ưu đãi** (sản phẩm đang giảm giá, mã giảm giá) và **Tin tức** (bài viết do quản trị đăng).
-- Giỏ hàng, đặt hàng, thanh toán COD / VietQR / SePay, tra cứu đơn, đổi trả, yêu thích, đánh giá, gợi ý size, giao diện sáng/tối, tiếng Việt/English.
+- Giỏ hàng, đặt hàng, thanh toán COD / VietQR / SePay, tra cứu đơn, đổi trả, yêu thích, đánh giá, gợi ý size theo số đo trong hồ sơ, giao diện sáng/tối, tiếng Việt/English.
 
 **Quản trị**: đơn hàng, đổi/trả, thanh toán và hoàn tiền, sản phẩm và kho, danh mục, bộ sưu tập, banner, **tin tức**, mã giảm giá, đánh giá, người dùng, nhật ký email.
 
@@ -53,6 +53,8 @@ giaodien (BFF, token nằm trong cookie httpOnly) ──► 6 dịch vụ bên d
 | `donhang` | Java · Spring Boot | Đặt hàng, mã giảm giá, vòng đời đơn, hủy, đổi/trả, thống kê | `ThoiTrang_DonHang` |
 | `thanhtoan` | Go · Gin | COD, VietQR, cổng SePay, webhook ngân hàng, đối soát, hoàn tiền | `ThoiTrang_ThanhToan` |
 | `thongbao` | PHP · Laravel | Email giao dịch, thông báo trong ứng dụng, gửi lại khi lỗi | `ThoiTrang_ThongBao` |
+| `trolyai` | Python · FastAPI | Chatbot tư vấn và CSKH: tìm sản phẩm, tồn kho, gợi ý size, chính sách (đọc dữ liệu từ `sanpham`, `donhang`) | không có |
+| `thudo` | Python · FastAPI | Thử đồ bằng AI: ghép áo của sản phẩm lên ảnh khách (tải lên hoặc chụp camera) qua Space công khai trên Hugging Face | không có (ảnh tạm trong RAM) |
 | `thongbao_gui_lai` | PHP · Laravel | Chạy lịch Laravel: gửi lại email lỗi mỗi phút | dùng chung với `thongbao` |
 | `giaodien` | Next.js | Cửa hàng, trang quản trị, BFF | không có |
 | `gateway` | Nginx | Cổng vào duy nhất, giới hạn tốc độ, ảnh tĩnh, webhook | không có |
@@ -204,7 +206,7 @@ database/data/
 | `/account` | Thông tin tài khoản và địa chỉ |
 | `/account/orders` | Đơn hàng của tôi |
 | `/account/wishlist` | Sản phẩm yêu thích |
-| `/size-guide` | Gợi ý size |
+| `/account/size` | Số đo trong hồ sơ, gợi ý size và sản phẩm phù hợp (`/size-guide` chuyển về đây) |
 | `/contact` | Liên hệ |
 | `/policies/<slug>` | Chính sách: `van-chuyen`, `thanh-toan`, `doi-tra`, `dieu-khoan`, `bao-mat`, `lien-he` |
 
@@ -234,6 +236,28 @@ Hai đường dẫn do Next.js tự xử lý (không chuyển xuống dịch v�
 
 - `POST /api/auth/login`
 - `POST /api/auth/logout`
+
+## Chatbot tư vấn
+
+Nút chat nổi ở góc phải mọi trang cửa hàng. Dịch vụ `trolyai` đọc sản phẩm, tồn kho và mã giảm giá qua API công khai của `sanpham`/`donhang`; giá, ảnh và liên kết trong thẻ sản phẩm lấy thẳng từ CSDL, không do AI tự viết.
+
+- **Có khóa Gemini**: mô hình (gói miễn phí của Google AI Studio) hiểu câu hỏi và gọi công cụ. Lấy khóa tại https://aistudio.google.com/apikey, điền `GEMINI_API_KEY` trong `.env`, rồi `docker compose up -d trolyai`.
+- **Không có khóa, hết hạn mức hoặc Gemini lỗi**: tự chuyển sang chế độ luật (hiểu "áo polo nam dưới 400k màu đen", "cao 1m70 nặng 65kg mặc size nào", hỏi chính sách...) nên chatbot không bao giờ im lặng.
+- **Dùng số đo trong hồ sơ**: khi khách đã đăng nhập và lưu số đo ở `/account/size`, chatbot tư vấn size và chọn sản phẩm còn hàng đúng cỡ ("gợi ý áo polo cho mình"). Chỉ giới tính và size gợi ý được dùng; số đo thô không gửi cho LLM.
+- Giới hạn theo IP: `TRO_LY_LUOT_MOI_PHUT` tin mỗi phút và `TRO_LY_LUOT_LLM_MOI_NGAY` lượt gọi LLM mỗi ngày để không vượt hạn mức miễn phí.
+- Chatbot không xem được đơn hàng, không hủy đơn hay hoàn tiền; nó chỉ chỉ đường tới trang Tra cứu đơn hàng và Liên hệ. Hội thoại chưa được lưu phía máy chủ (chỉ nằm trong `sessionStorage` của trình duyệt).
+- Nội dung chính sách nằm ở `service/assistantservice/app/policies.py`, cần giữ khớp với các trang `/policies/*`.
+
+## Thử đồ bằng AI
+
+Trang chi tiết **áo** (danh mục `ao-nam`, `ao-nu`) có nút "Thử đồ bằng AI". Khách đăng nhập, tải ảnh lên hoặc chụp bằng camera, đồng ý gửi ảnh, rồi nhận ảnh mặc thử.
+
+- **Cách chạy**: dịch vụ `thudo` gọi các Space IDM-VTON công khai trên Hugging Face (`THU_DO_SPACES`, thử lần lượt) bằng `gradio_client`, **miễn phí**. Mỗi lần mất khoảng 30 giây đến vài phút, xử lý lần lượt từng ảnh (hàng đợi).
+- **Không ổn định theo thiết kế**: Space công khai có thể quá tải, hết lượt GPU trong ngày hoặc ngừng hoạt động bất cứ lúc nào; khi đó khách nhận thông báo thân thiện. Có thể điền `HF_TOKEN` (token Hugging Face miễn phí) để tăng hạn mức.
+- **Giấy phép**: IDM-VTON chỉ cho dùng **phi thương mại**. Dùng cho đồ án hoặc bản demo; trước khi bán thật phải đổi sang model có giấy phép thương mại hoặc dịch vụ trả phí.
+- **Riêng tư**: ảnh khách gửi ra ngoài tới Hugging Face nên có hộp đồng ý bắt buộc. Dịch vụ xóa EXIF, không lưu ảnh gốc (xóa ngay sau khi xử lý), ảnh kết quả nằm trong RAM và tự xóa sau `THU_DO_GIU_KET_QUA_PHUT` phút hoặc khi khách bấm xóa.
+- **Giới hạn**: `THU_DO_LUOT_MOI_NGAY` lượt mỗi tài khoản mỗi ngày (mặc định 5), mỗi lần chỉ một lượt đang xử lý, lỗi phía dịch vụ thì hoàn lại lượt. Hạn mức đếm trong bộ nhớ nên reset khi khởi động lại dịch vụ.
+- **Ảnh áo** lấy từ ảnh sản phẩm trong CSDL. Hiện toàn bộ ảnh là link ngoài (CDN của Yody); xem mục bản quyền ảnh ở "Trước khi mở bán thật".
 
 ## Thanh toán
 
@@ -315,7 +339,7 @@ Script tạo CSDL nằm trong `database/`. Các file `03` và `04` tự bỏ qua
 |---|---|
 | `01_create_fashion_db.sql` | Tạo 6 CSDL và các bảng |
 | `02_service_accounts.sql` | Tạo tài khoản SQL cho từng dịch vụ |
-| `03_body_measurements.sql` | Bảng số đo cơ thể, dùng để gợi ý size |
+| `03_body_measurements.sql` | Bảng số đo cơ thể và giới tính, dùng để gợi ý size (idempotent, chạy lại an toàn) |
 | `04_tin_tuc.sql` | Bảng `TinTuc` (trong `ThoiTrang_SanPham`) cho mục Tin tức |
 | `data/` | Dữ liệu sản phẩm CSV theo danh mục (xem [Dữ liệu sản phẩm](#dữ-liệu-sản-phẩm)) |
 | `init_db.py` | Chạy các file SQL trên (do `csdl_khoi_tao` gọi) |
@@ -423,6 +447,8 @@ Việc cần tự giữ an toàn: `.env` chứa mật khẩu SQL, khóa nội b�
 - [ ] Chỉ mở cổng 80/443. Không mở 1433 và 8025 ra Internet.
 - [ ] Chạy thử trọn luồng: đặt COD, đặt VietQR (chuyển thật số tiền nhỏ), cổng SePay sandbox, hủy đơn, hết hạn giữ hàng, đổi/trả, quên mật khẩu.
 - [ ] SQL Server đang dùng bản Express (miễn phí, giới hạn dung lượng và RAM). Cửa hàng lớn cần bản có giấy phép phù hợp.
+- [ ] **Bản quyền ảnh và dữ liệu sản phẩm**: ảnh và nội dung sản phẩm mẫu lấy từ Yody (link ngoài tới CDN của họ). Trước khi bán thật hãy thay bằng ảnh và nội dung của chính bạn; cũng cần để tính năng thử đồ gửi ảnh áo cho dịch vụ AI một cách hợp lệ.
+- [ ] **Thử đồ AI và chatbot**: dùng dịch vụ miễn phí (Space Hugging Face phi thương mại, Gemini gói miễn phí) nên chỉ phù hợp demo. Bán thật cần model có giấy phép thương mại hoặc dịch vụ trả phí, và rà soát lại điều khoản quyền riêng tư.
 
 **Pháp lý (Việt Nam)** — hãy tự xác nhận lại với nguồn chính thức vì quy định thay đổi thường xuyên:
 

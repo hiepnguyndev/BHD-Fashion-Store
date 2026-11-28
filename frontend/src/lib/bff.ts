@@ -12,6 +12,8 @@ export const dichVu = {
   donHang: () => CHU_DE('DON_HANG_URL', 'http://localhost:8082'),
   thanhToan: () => CHU_DE('THANH_TOAN_URL', 'http://localhost:8083'),
   thongBao: () => CHU_DE('THONG_BAO_URL', 'http://localhost:8084'),
+  troLy: () => CHU_DE('TRO_LY_URL', 'http://localhost:8085'),
+  thuDo: () => CHU_DE('THU_DO_URL', 'http://localhost:8086'),
 };
 type Ten = keyof typeof dichVu;
 
@@ -26,6 +28,8 @@ const BANG: [RegExp, Ten][] = [
   [/^\/api\/thanh-toan(\/|$)/, 'thanhToan'],
   [/^\/api\/quan-tri\/(thanh-toan|hoan-tien|giao-dich-cong)(\/|$)/, 'thanhToan'],
   [/^\/api\/thong-bao(\/|$)/, 'thongBao'],
+  [/^\/api\/tro-ly(\/|$)/, 'troLy'],
+  [/^\/api\/thu-do(\/|$)/, 'thuDo'],
   [/^\/api\/quan-tri\/nhat-ky-gui(\/|$)/, 'thongBao'],
 ];
 // Các đường dẫn do BFF tự xử lý, không cho gọi thẳng xuống dịch vụ

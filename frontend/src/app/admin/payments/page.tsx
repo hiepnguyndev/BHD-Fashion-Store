@@ -37,7 +37,7 @@ function DsThanhToan() {
   return (<>
     <form className="thanh-cong-cu" onSubmit={(e) => { e.preventDefault(); setTrang(1); setTk(tuKhoa.trim()); }}>
       <select className="o" value={trangThai} onChange={(e) => { setTrangThai(e.target.value); setTrang(1); }}><option value="">Mọi trạng thái</option>{Object.entries(TEN_TT_THANH_TOAN).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select>
-      <select className="o" value={kenh} onChange={(e) => { setKenh(e.target.value); setTrang(1); }}><option value="">Mọi kênh</option>{Object.entries(TEN_PHUONG_THUC).map(([k, v]) => <option key={k} value={k}>{k}</option>)}</select>
+      <select className="o" value={kenh} onChange={(e) => { setKenh(e.target.value); setTrang(1); }}><option value="">Mọi kênh</option>{Object.keys(TEN_PHUONG_THUC).map((k) => <option key={k} value={k}>{k}</option>)}</select>
       <input className="o" placeholder="Mã đơn / mã thanh toán…" value={tuKhoa} onChange={(e) => setTuKhoa(e.target.value)} /><button className="nut">Tìm</button>
     </form>
     <p className="nho mo">“Cần xử lý”: tiền về sai số tiền, về sau khi đơn hủy/hết hạn. Hãy đối chiếu sao kê rồi xác nhận hoặc tạo yêu cầu hoàn tiền.</p>

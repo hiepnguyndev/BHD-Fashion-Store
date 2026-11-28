@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
-import { DangTai, NhanTrangThai } from '@/components/Common';
+import { DangTai } from '@/components/Common';
 import { goi, LoiApi } from '@/lib/api';
 import { TEN_TT_THANH_TOAN, vnd } from '@/lib/format';
 
