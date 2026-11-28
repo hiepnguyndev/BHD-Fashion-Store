@@ -257,10 +257,16 @@ func trangThaiCongKhai(c *gin.Context) {
 			trangThai = "HetHan"
 		}
 	}
-	c.JSON(200, gin.H{
+	out := gin.H{
 		"trangThai": trangThai, "kenh": t["kenhThanhToan"], "soTien": t["soTien"],
 		"hetHanLuc": t["hetHanLuc"], "maDonHienThi": t["maDonHienThi"],
-	})
+	}
+	if trangThai == "ChoThanhToan" {
+		if h := huongDan(t); h != nil {
+			out["huongDan"] = h
+		}
+	}
+	c.JSON(200, out)
 }
 
 // baoDonHang báo cho OrderService biết đã nhận tiền. Trả về: "ok" | "donDaHuy" | "loi".

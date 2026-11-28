@@ -253,6 +253,7 @@ func webhookSePay(c *gin.Context) {
 		Gateway         string      `json:"gateway"`
 		TransactionDate string      `json:"transactionDate"`
 		AccountNumber   string      `json:"accountNumber"`
+		SubAccount      string      `json:"subAccount"`
 		Content         string      `json:"content"`
 		TransferType    string      `json:"transferType"`
 		TransferAmount  json.Number `json:"transferAmount"`
@@ -276,7 +277,7 @@ func webhookSePay(c *gin.Context) {
 	}
 	kq, err := xuLyTienVao(c.Request.Context(), tienVao{
 		Nguon: "Webhook", MaNgoai: w.ID.String(), NganHang: w.Gateway, MaThamChieu: w.ReferenceCode,
-		NoiDung: w.Content, SoTien: int64(math.Round(f)), NgayGD: ngay, Tho: string(b), SoTaiKhoan: w.AccountNumber,
+		NoiDung: w.Content, SoTien: int64(math.Round(f)), NgayGD: ngay, Tho: string(b), SoTaiKhoan: w.AccountNumber, SoTaiKhoanPhu: w.SubAccount,
 	})
 	if err != nil {
 		log.Printf("webhook %s lỗi: %v", w.ID.String(), err)
@@ -287,7 +288,7 @@ func webhookSePay(c *gin.Context) {
 }
 
 type tienVao struct {
-	Nguon, MaNgoai, NganHang, MaThamChieu, NoiDung, Tho, SoTaiKhoan string
+	Nguon, MaNgoai, NganHang, MaThamChieu, NoiDung, Tho, SoTaiKhoan, SoTaiKhoanPhu string
 	SoTien                                                          int64
 	NgayGD                                                          *time.Time
 	MaThanhToanBiet                                                 int64
@@ -347,7 +348,7 @@ func xuLyTienVao(ctx context.Context, t tienVao) (string, error) {
 		if len(ds) > 0 {
 			tt = ds[0]
 		}
-	} else if t.SoTaiKhoan == "" || ch.soTaiKhoan == "" || strings.TrimSpace(t.SoTaiKhoan) == ch.soTaiKhoan {
+	} else if (t.SoTaiKhoan == "" && t.SoTaiKhoanPhu == "") || ch.soTaiKhoan == "" || strings.TrimSpace(t.SoTaiKhoan) == ch.soTaiKhoan || strings.TrimSpace(t.SoTaiKhoanPhu) == ch.soTaiKhoan {
 		for _, ma := range timMaThanhToan(t.NoiDung) {
 			ds, err := truyVan(ctx, "SELECT "+cotThanhToan+" FROM dbo.ThanhToan WHERE MaThanhToanNganHang = @p1", ma)
 			if err != nil {

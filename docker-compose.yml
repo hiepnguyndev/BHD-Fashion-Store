@@ -255,6 +255,13 @@ services:
       - ./gateway/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - anh_san_pham:/anh:ro
 
+  cloudflared:                      # đưa gateway ra Internet qua Cloudflare Tunnel (HTTPS, không cần mở cổng router); chỉ chạy khi: docker compose --profile tunnel up -d
+    image: cloudflare/cloudflared:latest
+    profiles: ["tunnel"]
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${CF_TUNNEL_TOKEN:-}
+    depends_on: [gateway]
+
   mailpit:                          # hộp thư thử nghiệm; khi chạy thật hãy đặt MAIL_* trỏ tới SMTP thật rồi xóa dịch vụ này
     image: axllent/mailpit:latest
     restart: unless-stopped

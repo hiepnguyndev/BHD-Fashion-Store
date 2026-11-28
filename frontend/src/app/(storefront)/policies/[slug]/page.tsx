@@ -15,7 +15,7 @@ const NOI_DUNG: Record<string, { tieuDe: string; doan: [string, string][] }> = {
     ['Thời gian', 'Thời gian giao dự kiến phụ thuộc khu vực và đơn vị vận chuyển; bạn sẽ nhận email cập nhật khi trạng thái đơn thay đổi.'],
   ] },
   'thanh-toan': { tieuDe: 'Chính sách thanh toán', doan: [
-    ['Hình thức', 'Thanh toán khi nhận hàng (COD), chuyển khoản qua mã VietQR, hoặc thanh toán thẻ/ví/QR qua cổng SePay.'],
+    ['Hình thức', 'Thanh toán khi nhận hàng (COD) hoặc chuyển khoản ngân hàng qua mã QR.'],
     ['Thời gian giữ đơn', 'Với đơn thanh toán trước, hàng được giữ trong thời gian giới hạn; quá hạn mà chưa thanh toán đơn sẽ tự hủy. Nếu bạn đã chuyển tiền sau khi đơn hủy, cửa hàng sẽ kiểm tra và hoàn tiền.'],
     ['Bảo mật', 'Cửa hàng không lưu thông tin thẻ của bạn. Giao dịch thẻ do cổng thanh toán xử lý.'],
   ] },

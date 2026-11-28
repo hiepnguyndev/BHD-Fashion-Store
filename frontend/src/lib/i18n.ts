@@ -27,7 +27,7 @@ const EN: Record<string, string> = {
   'Chưa tải được danh sách sản phẩm. Vui lòng thử lại sau ít phút.': 'Could not load the product list. Please try again in a few minutes.',
   'Giao hàng toàn quốc': 'Nationwide delivery', 'Miễn phí vận chuyển cho đơn đủ điều kiện.': 'Free shipping on eligible orders.',
   'Đổi trả trong 7 ngày': '7-day returns', 'Kể từ khi nhận hàng, theo chính sách đổi trả.': 'From the day you receive the goods, per our returns policy.',
-  'Thanh toán linh hoạt': 'Flexible payment', 'COD, chuyển khoản VietQR, thẻ/ví qua SePay.': 'Cash on delivery, VietQR bank transfer, cards/wallets via SePay.',
+  'Thanh toán linh hoạt': 'Flexible payment', 'COD hoặc chuyển khoản ngân hàng.': 'Cash on delivery or bank transfer.',
   // danh sách sản phẩm
   'Sản phẩm': 'Products', 'Mới nhất': 'Newest', 'Bán chạy': 'Best sellers', 'Đánh giá cao': 'Top rated', 'Giá tăng dần': 'Price: low to high', 'Giá giảm dần': 'Price: high to low',
   'Tất cả mức giá': 'All prices', 'Dưới 300.000₫': 'Under 300,000₫', 'Trên 1.000.000₫': 'Over 1,000,000₫',
@@ -84,7 +84,7 @@ const EN: Record<string, string> = {
   'Số điện thoại 10 chữ số, bắt đầu bằng 0': '10-digit phone number starting with 0', 'Email (nhận xác nhận đơn hàng)': 'Email (for order confirmation)',
   'Số nhà, tên đường': 'House number, street', 'Phường / xã': 'Ward / commune', 'Tỉnh / thành phố': 'Province / city',
   'Ghi chú cho cửa hàng (không bắt buộc)': 'Note to the store (optional)', 'Phương thức thanh toán': 'Payment method',
-  'Thanh toán khi nhận hàng (COD)': 'Cash on delivery (COD)', 'Chuyển khoản VietQR': 'VietQR bank transfer', 'Thẻ / ví / QR qua cổng SePay': 'Card / wallet / QR via SePay',
+  'Thanh toán khi nhận hàng (COD)': 'Cash on delivery (COD)', 'Chuyển khoản': 'Bank transfer', 'Thẻ / ví / QR qua cổng SePay': 'Card / wallet / QR via SePay',
   'Trả tiền mặt cho nhân viên giao hàng.': 'Pay cash to the courier.', 'Quét mã QR bằng app ngân hàng, hệ thống tự xác nhận khi tiền về.': 'Scan the QR code with your banking app; the system confirms automatically when the money arrives.',
   'Thanh toán bằng thẻ, ví hoặc QR trên cổng của SePay.': 'Pay by card, wallet or QR on the SePay gateway.',
   'Đơn hàng ({n} sản phẩm)': 'Order ({n} items)', 'Nhập mã': 'Enter code', 'Áp dụng': 'Apply', 'Đã áp dụng mã {ma}: giảm {n}': 'Code {ma} applied: {n} off',

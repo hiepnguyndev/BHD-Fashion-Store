@@ -27,7 +27,7 @@ export const MAU_TRANG_THAI: Record<string, string> = {
   HoatDong: 'luc', Khoa: 'do', DangBan: 'luc', An: 'xam', NgungBan: 'do', HienThi: 'luc', An_: 'xam',
 };
 export const TEN_PHUONG_THUC: Record<string, string> = {
-  COD: 'Thanh toán khi nhận hàng (COD)', VietQR: 'Chuyển khoản VietQR', SePayGateway: 'Thẻ / ví / QR qua cổng SePay',
+  COD: 'Thanh toán khi nhận hàng (COD)', VietQR: 'Chuyển khoản', SePayGateway: 'Thẻ / ví / QR qua cổng SePay',
 };
 export const TEN_TT_THANH_TOAN: Record<string, string> = {
   ChoThanhToan: 'Chờ thanh toán', DaThanhToan: 'Đã thanh toán', HetHan: 'Hết hạn', CanXuLy: 'Cần xử lý', DaHoan: 'Đã hoàn tiền',

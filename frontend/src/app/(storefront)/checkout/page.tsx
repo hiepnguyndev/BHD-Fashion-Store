@@ -116,11 +116,11 @@ export default function TrangDatHang() {
 
           <section className="the">
             <h2>{t('Phương thức thanh toán')}</h2>
-            {(['COD', 'VietQR', 'SePayGateway'] as const).map((k) => (
+            {(['COD', 'VietQR'] as const).map((k) => (
               <label key={k} className={'the-chon' + (phuongThuc === k ? ' dang' : '')}>
                 <input type="radio" name="pt" checked={phuongThuc === k} onChange={() => setPhuongThuc(k)} />
                 <div><b>{t(TEN_PHUONG_THUC[k])}</b>
-                  <div className="nho mo">{k === 'COD' ? t('Trả tiền mặt cho nhân viên giao hàng.') : k === 'VietQR' ? t('Quét mã QR bằng app ngân hàng, hệ thống tự xác nhận khi tiền về.') : t('Thanh toán bằng thẻ, ví hoặc QR trên cổng của SePay.')}</div></div>
+                  <div className="nho mo">{k === 'COD' ? t('Trả tiền mặt cho nhân viên giao hàng.') : t('Quét mã QR bằng app ngân hàng, hệ thống tự xác nhận khi tiền về.')}</div></div>
               </label>
             ))}
           </section>
