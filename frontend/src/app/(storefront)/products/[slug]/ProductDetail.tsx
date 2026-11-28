@@ -4,10 +4,11 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { Anh, Sao } from '@/components/Common';
 import { useAuth, useGio, useT, useToast } from '@/components/Providers';
+import ThuDo from '@/components/ThuDo';
 import { goi, LoiApi } from '@/lib/api';
 import { ngay, vnd } from '@/lib/format';
 
-export default function ProductDetail({ sanPham, hinhAnh, bienThe }: { sanPham: any; hinhAnh: any[]; bienThe: any[] }) {
+export default function ProductDetail({ sanPham, hinhAnh, bienThe, choThuDo = false }: { sanPham: any; hinhAnh: any[]; bienThe: any[]; choThuDo?: boolean }) {
   const router = useRouter();
   const { nguoiDung } = useAuth();
   const { them } = useGio();
@@ -106,6 +107,7 @@ export default function ProductDetail({ sanPham, hinhAnh, bienThe }: { sanPham: 
             <button className="nut vien tron" aria-label={yeuThich ? t('Bỏ yêu thích') : t('Yêu thích')} aria-pressed={yeuThich} onClick={doiYeuThich} style={{ width: 48, height: 48 }}>{yeuThich ? '♥' : '♡'}</button>
           </div>
           <button className="nut dat rong cach" style={{ marginTop: 10 }} disabled={dangThem} onClick={() => themVaoGio(true)}>{t('Mua ngay')}</button>
+          {choThuDo && <ThuDo slug={sanPham.duongDan} mau={mau} ten={sanPham.tenSanPham} />}
 
           <div className="cach mo nho">
             {sanPham.chatLieu && <div><b>{t('Chất liệu:')}</b> {sanPham.chatLieu}</div>}

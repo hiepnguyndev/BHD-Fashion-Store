@@ -27,7 +27,7 @@ export default async function TrangSanPham({ params }: Ngu) {
         <Link href="/">{t('Trang chủ')}</Link> / <Link href="/products">{t('Sản phẩm')}</Link>
         {d.danhMuc.map((c: any) => <span key={c.maDanhMuc}> / <Link href={'/products?danhMuc=' + c.duongDan}>{c.tenDanhMuc}</Link></span>)}
       </nav>
-      <ProductDetail sanPham={d.sanPham} hinhAnh={d.hinhAnh} bienThe={d.bienThe} />
+      <ProductDetail sanPham={d.sanPham} hinhAnh={d.hinhAnh} bienThe={d.bienThe} choThuDo={d.danhMuc.some((c: any) => c.duongDan === 'ao-nam' || c.duongDan === 'ao-nu')} />
       {d.lienQuan.length > 0 && (
         <>
           <div className="tieu-de-muc"><h2>{t('Có thể bạn thích')}</h2></div>
