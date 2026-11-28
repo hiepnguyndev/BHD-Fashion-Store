@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ChatWidget from '@/components/ChatWidget';
 import { layDuLieu } from '@/lib/server';
 
 export const dynamic = 'force-dynamic';
@@ -12,6 +13,7 @@ export default async function CuaHangLayout({ children }: { children: ReactNode 
       <Header danhMuc={danhMuc} />
       <main className="khung trang-chinh">{children}</main>
       <Footer />
+      <ChatWidget />
     </>
   );
 }
